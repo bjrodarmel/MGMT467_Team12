@@ -1,8 +1,8 @@
 ##  Executive Dashboard & Visualization
 
 This project includes a live Looker Studio dashboard that visualizes the real-time data stream and model predictions.
-
-**[👉 CLICK HERE TO VIEW THE LIVE DASHBOARD 👈]((https://lookerstudio.google.com/reporting/9e46bd0f-7df6-4541-b897-5eaabcc860a7))**
+[
+(https://lookerstudio.google.com/reporting/9e46bd0f-7df6-4541-b897-5eaabcc860a7)
 
 ---
 
