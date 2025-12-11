@@ -1,39 +1,52 @@
-**Section 1:**
-We will build a Real-Time Cryptocurrency Anomaly Detection Pipeline to help algorithmic traders instantly identify market manipulation or 'flash crashes.' 
-Crypto markets are highly volatile, and delayed data leads to missed arbitrage opportunities or significant portfolio losses. 
-Currently, our traders rely on manual chart monitoring, which is too slow. 
-Our system will solve this by training a model on years of historical price data to understand 'normal' volatility, while simultaneously streaming live price data from an API to flag anomalies the second they happen.
+**Section 1: Project Overview**
+
+We will build a Real-Time Weather Anomaly Detection Pipeline designed to monitor critical infrastructure risks. Extreme weather events (like sudden heatwaves or flash freezes) pose significant threats to energy grids, transportation networks, and agriculture. Traditional weather reporting is often static or delayed. Our system solves this by training a machine learning model on one year of historical hourly temperature data to understand seasonal "normals," while simultaneously streaming live temperature data every 15 minutes from an API. This allows for instant detection of statistical anomalies as they happen.
 
 
-**Section 2:**
-Batch Source: We will download the "Bitcoin Historical Data" Dataset from Kaggle (https://www.kaggle.com/datasets/mczielinski/bitcoin-historical-data)
+**Section 2: Data Sources**
 
-Streaming Source: We will use the CoinGecko API since it is free and requires no key for basic use.
+Batch Source (History): We will programmatically extract 1 year of historical hourly temperature data for New York City (Latitude: 40.71, Longitude: -74.01) from the Open-Meteo Archive API.
 
-**Section 3:**
-**Architecture Diagram**
+Role: Provides the baseline "normal" behavior for model training.
 
-<img width="721" height="231" alt="image" src="https://github.com/user-attachments/assets/2280750a-8491-4e68-84e8-d007b3b1e7c6" />
+Streaming Source (Live): We will use the Open-Meteo Forecast API to fetch the current temperature every 15 minutes via a Cloud Function.
+
+Role: Provides the real-time feed to be scored against the model.
 
 
-**Section 4:**
+**Section 3: Architecture Diagram**
 
-Model Type: Time Series Forecasting (ARIMA_PLUS)
+Batch Layer: Open-Meteo API → Python Extract (Colab) → Google Cloud Storage (Raw CSV) → BigQuery (weather_history table).
 
-Why: This model is built specifically for timestamped data and handles seasonality well.
+Streaming Layer: Cloud Scheduler (15 min) → Cloud Function (Producer) → Pub/Sub (weather-live-topic) → Dataflow → BigQuery (weather_streaming table).
+
+Analytics Layer: BigQuery Views (Unified) → BigQuery ML (ARIMA_PLUS) → Looker Studio Dashboard.
+
+
+**Section 4: Modeling Strategy**
+
+Model Type: Time Series Forecasting (ARIMA_PLUS in BigQuery ML).
+
+Why: ARIMA_PLUS is ideal for this use case because weather data is highly seasonal (daily and yearly cycles) and requires automatic handling of time-series decomposition (trends vs. seasonal spikes).
 
 Target & Features:
 
-Target: daily_avg_sentiment (Average sentiment score aggregated by day)
+Target: temperature (Air temperature in Celsius).
 
-Features: review_date (Timestamp from the historical and streaming data), total_review_volume (Count of reviews per day)
+Features: timestamp (Standardized UTC timestamp from both historical and live sources).
+
+Anomaly Threshold: We utilize a probability threshold of 0.8 to balance sensitivity (catching real shifts) with noise reduction.
 
 
-**Section 5:**
 
-**KPI Visuals**
+**Section 5: KPI Visuals (Executive Dashboard)**
 
-1. The Pulse Gauge (Real-Time Sentiment): Gauge Chart that shows average sentiment
-2. The Futurecast (ML Prediction): Line chart with confidence internal comparing forecasted_sentiment_score vs. actual_sentiment_score
-3. Red Flag Volume: Scorecard with comparision that compares sentiment_score to -0.8
-4. Product Health Leaderboard: Table with heatmap columns listing Product IDs ranked by lowest average sentiment
+Current Temp (Scorecard): Displays the most recent temperature reading from the live stream to prove real-time connectivity.
+
+24h High/Low (Scorecards): Tracks the daily range to provide immediate context to the current reading.
+
+Anomalies Detected (Scorecard): A red-flag counter showing the number of data points in the last 24 hours that statistically deviated from the expected model.
+
+The "Live Pulse" (Time-Series Chart): A line chart visualizing the temperature over time, with the streaming data overlaid on the historical context.
+
+Anomaly Detail Table: A table listing specific timestamps, actual temperatures, and the model's expected lower_bound / upper_bound, with conditional formatting highlighting anomalies in red.
