@@ -1,10 +1,10 @@
-# Real-Time Weather Anomaly Detection Pipeline 🌦️
+# Real-Time Weather Anomaly Detection Pipeline 
 
 **MGMT 467 Term Project**
 
 This project implements an end-to-end data engineering pipeline on Google Cloud Platform (GCP). It combines historical weather data (Batch) with live temperature streams (Real-Time) to detect anomalies using BigQuery ML (`ARIMA_PLUS`). The system is designed to identify sudden infrastructure risks (e.g., flash freezes, heatwaves) instantly.
 
-## 🏗️ Architecture
+##  Architecture
 
 The pipeline follows a hybrid **Lambda Architecture**:
 
@@ -13,18 +13,17 @@ The pipeline follows a hybrid **Lambda Architecture**:
 3.  **Analytics Layer:** BigQuery ML model trains on history and scores live data in real-time.
 4.  **Presentation:** Looker Studio Dashboard for executive monitoring.
 
-![Architecture Diagram](https://via.placeholder.com/800x400?text=Insert+Architecture+Diagram+Here)
-*(Replace with your generated Architecture Diagram)*
+
 
 ---
 
-## 🛠️ Prerequisites
+##  Prerequisites
 
 * Google Cloud Platform Account
 * `gcloud` CLI installed and authenticated
 * Python 3.10+
 
-## 🚀 Service Enablement
+## � Service Enablement
 
 Run the following commands to enable the required APIs for the project:
 
