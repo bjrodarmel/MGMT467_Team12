@@ -1,16 +1,12 @@
 ##  Executive Dashboard & Visualization
 
 This project includes a live Looker Studio dashboard that visualizes the real-time data stream and model predictions.
-[
 (https://lookerstudio.google.com/reporting/9e46bd0f-7df6-4541-b897-5eaabcc860a7)
 
 ---
 
 ### Dashboard Overview
 The dashboard is designed for "at-a-glance" monitoring of weather conditions and infrastructure risks. It updates automatically as new data arrives from the streaming pipeline.
-
-![Dashboard Screenshot](https://via.placeholder.com/800x400?text=Paste+Your+Dashboard+Screenshot+Here)
-*(Replace the link above with a screenshot of your final dashboard)*
 
 ### Visual Breakdown
 
